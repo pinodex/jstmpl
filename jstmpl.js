@@ -9,6 +9,8 @@
 
 (function() {
 
+    "use strict";
+
     window.Template = function(name) {
 
         this.patterns = {
@@ -42,6 +44,8 @@
                         string = string.replace(new RegExp(matches[ia], 'gm'), data[replacement]);
                     }
                 };
+
+                var target;
 
                 if ((target = this.elements[i].getAttribute('data-target'))) {
                     var targets = document.querySelectorAll(target);

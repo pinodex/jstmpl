@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>jstmpl - Simple JavaScript Templating Engine</title>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 52rem;
+            padding: 0 1rem;
+            margin: 0 auto;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3em;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .output {
+            background: #eee;
+            padding: 1rem;
+            border-radius: 3px;
+        }
+
+        pre {
+            background: #222;
+            color: #fff;
+            border-radius: 3px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .footer {
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <h1 data-template="welcome">{{ welcome }}!</h1>
+            <p>This is jstmpl, a simple templating engine written in JavaScript. Very simple that it can only do things on variables. More features will come later such as conditional statements, for loops, etc...</p>
+            <p>There are two ways to use the templating engine:</p>
+            <p><strong>Direct to element</strong></p>
+            <pre><code>&#x3C;div data-template=&#x22;hello-world&#x22;&#x3E;{{ hello }} {{ world }}&#x3C;/div&#x3E;
+&#x3C;script&#x3E;
+    new Template(&#x27;hello-world&#x27;).parse({
+        hello: &#x27;Hello&#x27;,
+        world: &#x27;World!&#x27;
+    }
+&#x3C;/script&#x3E;</code></pre>
+            <p>The variables will be directly parsed to the element.</p>
+            <p>This will output:</p>
+            <div class="output">
+                <div data-template="hello-world">{{ hello }} {{ world }}</div>
+            </div>
+            <p><strong>Template script to element:</strong></p>
+            <pre><code>&#x3C;div id=&#x22;hello-world&#x22;&#x3E;&#x3C;/div&#x3E;
+
+&#x3C;script type=&#x22;text/template&#x22; data-template=&#x22;hello-world&#x22; data-target=&#x22;#hello-world&#x22;&#x3E;
+    {{ hello }} {{ world }} {{ again }}
+&#x3C;/script&#x3E;
+&#x3C;script&#x3E;
+    new Template(&#x27;hello-world&#x27;).parse({
+        hello: &#x27;Hello&#x27;,
+        world: &#x27;World!&#x27;,
+        again: &#x27;Again&#x27;
+    });
+&#x3C;/script&#x3E;</code></pre>
+            <p>It will get the template from the template script, parse the variables, and then put to the target element. You can also re-use the template with this method by calling the <code>parse</code> function on the template object again.</p>
+            <p>This will output:</p>
+            <div class="output">
+                <div id="hello-world"></div>
+            </div>
+            <p>The <code>parse</code> function can accept two different data format. It can also be nested. Examples:</p>
+            <pre><code>// Using key value object
+new Template(&#x27;hello-world&#x27;).parse({
+    hello: &#x27;Hello&#x27;,
+    world: &#x27;World!&#x27;
+});
+
+// Using string literals
+new Template(&#x27;hello-world&#x27;).parse(&#x27;hello&#x27;, &#x27;Hello&#x27;);
+
+// Nesting
+new Template(&#x27;hello-world&#x27;).parse(&#x27;hello&#x27;, &#x27;Hello&#x27;).parse(&#x27;world&#x27;, &#x27;World!&#x27;);
+
+// Re-using template object
+var template = new Template(&#x27;hello-world&#x27;);
+template.parse(&#x27;hello&#x27;, &#x27;Hello&#x27;);
+template.parse(&#x27;world&#x27;, &#x27;World!&#x27;);
+
+form.onsubmit(function() {
+    // This is a pseudo-code.
+
+    template.parse(&#x27;world&#x27;, form[&#x27;name&#x27;]);
+});</code></pre>
+        </div>
+        <div class="footer"></div>
+    </div>
+    <script type="text/template" data-template="hello-world-2" data-target="#hello-world">
+        {{ hello }} {{ world }} {{ again }}
+    </script>
+    <script type="text/template" data-template="footer" data-target=".footer">
+        <p>Time now is {{ time }}</p>
+    </script>
+    <script type="text/javascript" src="jstmpl.min.js"></script>
+    <script type="text/javascript">
+        var welcomeTrans = [
+            'Welcome',
+            'Bienvenido',
+            'Bem-vindo',
+            'Viteje',
+            'Willkommen',
+            'Bienvenue',
+            'Velkommen',
+            'Benvenuto',
+            'Welkom'
+        ];
+
+        var welcomeTemplate = new Template('welcome');
+        welcomeTemplate.parse('welcome', welcomeTrans[Math.floor(Math.random() * welcomeTrans.length)]);
+
+        new Template('hello-world').parse({
+            hello: 'Hello',
+            world: 'World!'
+        });
+
+        new Template('hello-world-2').parse({
+            hello: 'Hello',
+            world: 'World!',
+            again: 'Again'
+        });
+
+        var footer = new Template('footer').parse('time', new Date());
+
+        setInterval(function() {
+            footer.parse('time', new Date());
+        }, 1000);
+    </script>
+</body>
+</html>

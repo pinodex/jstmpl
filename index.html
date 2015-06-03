@@ -49,6 +49,11 @@
             padding: 0.5rem;
             text-align: left;
         }
+
+        #footer {
+            border-top: 1px solid #ccc;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -60,7 +65,7 @@
             <p><strong>Direct to element</strong></p>
             <pre><code>&#x3C;div data-template=&#x22;hello-world&#x22;&#x3E;{{ hello }} {{ world }}&#x3C;/div&#x3E;
 &#x3C;script&#x3E;
-    new Jstmpl().render(&#x27;hello-world&#x27;, {
+    new Jstmpl().template(&#x27;hello-world&#x27;).render({
         hello: &#x27;Hello&#x27;,
         world: &#x27;World!&#x27;
     });
@@ -77,7 +82,7 @@
 &#x3C;/script&#x3E;
 
 &#x3C;script&#x3E;
-    new Jstmpl().render(&#x27;hello-world&#x27;, {
+    new Jstmpl().template(&#x27;hello-world&#x27;).render({
         hello: &#x27;Hello&#x27;,
         world: &#x27;World!&#x27;,
         again: &#x27;Again&#x27;
@@ -99,12 +104,12 @@
 &#x3C;/script&#x3E;
 
 &#x3C;script&#x3E;
-    var footer = page.render(&#x27;footer&#x27;, {
+    var footer = page.template(&#x27;footer&#x27;).render({
         time: new Date()
     });
 
     setInterval(function() {
-        footer.parse({
+        footer.render({
             time: new Date()
         });
     }, 1000);
@@ -116,8 +121,31 @@
             <div class="footer"></div>
             <div class="footer"></div>
         </div>
+        <p>Getting the parsed output only:</p>
+        <pre><code>&#x3C;script type=&#x22;text/template&#x22; data-template=&#x22;chat&#x22;&#x3E;
+    &#x3C;p&#x3E;&#x3C;strong&#x3E;{{ from }}&#x3C;/strong&#x3E; {{ message }}&#x3C;/p&#x3E;
+&#x3C;/script&#x3E;
+
+&#x3C;script&#x3E;
+    var chat = new Jstmpl().template(&#x27;chat&#x27;).parse({
+        from: &#x27;Lorem&#x27;,
+        message: &#x27;Ipsum!&#x27;
+    });
+
+    console.log(chat);
+&#x3C;/script&#x3E;</code></pre>
+        <p>This will output the parsed template and it will not render on page:</p>
+        <div class="output">
+            <button id="chat-test">Click to test</button> (Open your console to see the output)
+        </div>
+        <p><strong>Jstmpl object</strong></p>
         <p>A single Jstmpl object can be used for the whole page. It can also accept key-value options:</p>
         <pre><code>new Jstmpl(options);</code></pre>
+        <p><strong>Default options</strong></p>
+        <p>You can also define default options which will be used in all Jstmpl objects.</p>
+        <pre><code>var jstmpl_defaults = {
+    debug: true
+};</code></pre>
         <p>List of options:</p>
         <table>
             <thead>
@@ -140,7 +168,15 @@
                 </tr>
             </tbody>
         </table>
-        <p>Functions:</p>
+        <p><strong>Templating features:</strong></p>
+        <p>There&rsquo;s currently few features implemented in Jstmpl, I&rsquo;ll be adding more features later. But for now, here&rsquo;s what&rsquo;s working:</p>
+        <p>&bullet; Variables</p>
+        <pre><code>{{ variable }}</code></pre>
+        <p>&bullet; For-loops</p>
+        <pre><code>{% for item in items %}
+    {{ item }}
+{% endfor %}</code></pre>
+        <p><strong>Functions:</strong></p>
         <p>Functions are used here to manipulate strings. Example:</p>
         <pre><code>{{ variable|function_name }}</code></pre>
         <p>List of pre-defined functions:</p>
@@ -158,7 +194,7 @@
                 </tr>
             </tbody>
         </table>
-        <p>Custom functions:</p>
+        <p><strong>Custom functions:</strong></p>
         <p>You can define custom functions when creating the Jstmpl object. The variable content will be passed to this function and should return the processed string. Example:</p>
         <pre><code>var page = new Jstmpl({
     fn: {
@@ -173,13 +209,19 @@
 &#x3C;/div&#x3E;
 
 &#x3C;script&#x3E;
-    page.render(&#x27;base64&#x27;, {
+    page.template(&#x27;base64&#x27;).render({
         value: &#x27;Hello, World in Base64&#x27;
     });
 &#x3C;/script&#x3E;</code></pre>
+        <div id="footer">
+            <em>Documentation will improve everytime I'm in a mood.</em>
+        </div>
     </div>
     <script type="text/template" data-template="hello-world-2" data-target="#hello-world">
         {{ hello }} {{ world }} {{ again }}
+    </script>
+    <script type="text/template" data-template="chat">
+    <p><strong>{{ from }}</strong> {{ message }}</p>
     </script>
     <script type="text/template" data-template="footer" data-target=".footer">
         <p>Time now is {{ time }}</p>
@@ -202,27 +244,36 @@
             debug: true
         });
 
-        page.render('welcome', {
+        page.template('welcome').render({
             welcome: welcomeTrans[Math.floor(Math.random() * welcomeTrans.length)]
         });
 
-        page.render('hello-world', {
+        page.template('hello-world').render({
             hello: 'Hello',
             world: 'World!'
         });
 
-        page.render('hello-world-2', {
+        page.template('hello-world-2').render({
             hello: 'Hello',
             world: 'World!',
             again: 'Again'
         });
 
-        var footer = page.render('footer', {
+        var chat = new Jstmpl().template('chat').parse({
+            from: 'Lorem',
+            message: 'Ipsum!'
+        });
+
+        document.getElementById('chat-test').addEventListener('click', function() {
+            console.log(chat);
+        });
+
+        var footer = page.template('footer').render({
             time: new Date()
         });
 
         setInterval(function() {
-            footer.parse({
+            footer.render({
                 time: new Date()
             });
         }, 1000);

@@ -5,10 +5,10 @@ Simple JavaScript Templating Engine
 ```
 <div data-template="hello-world">{{ hello }} {{ world }}</div>
 <script>
-    new Jstmpl().render('hello-world', {
+    new Jstmpl().template('hello-world').render({
         hello: 'Hello',
         world: 'World!'
-    }
+    });
 </script>
 ```
 

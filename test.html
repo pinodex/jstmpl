@@ -35,11 +35,9 @@
     <script type="text/template" data-template="test9" data-target="#test9">{{ count }}</script>
     <script type="text/template" data-template="test10" data-target="#test10">{{ count }}</script>
 
-    <script src="jstmpl.js"></script>
+    <script src="jstmpl.min.js"></script>
     <script>
-        var page = new Jstmpl({
-            debug: true
-        });
+        var page = new Jstmpl();
 
         document.getElementById('run').addEventListener('click', function() {
             this.style.display = 'none';
@@ -54,46 +52,45 @@
             for (var i = 0; i <= max; i++) {
                 count *= Math.random();
 
-                page.render('test1', {
+                page.template('test1').render({
                     count: ++count
                 });
 
-                page.render('test2', {
+                page.template('test2').render({
                     count: ++count
                 });
 
-                page.render('test3', {
+                page.template('test3').render({
                     count: ++count
                 });
 
-                page.render('test4', {
+                page.template('test4').render({
                     count: ++count
                 });
 
-                page.render('test5', {
+                page.template('test5').render({
                     count: ++count
                 });
 
-                page.render('test6', {
+                page.template('test6').render({
                     count: ++count
                 });
 
-                page.render('test7', {
+                page.template('test7').render({
                     count: ++count
                 });
 
-                page.render('test8', {
+                page.template('test8').render({
                     count: ++count
                 });
 
-                page.render('test9', {
+                page.template('test9').render({
                     count: ++count
                 });
 
-                page.render('test10', {
+                page.template('test10').render({
                     count: ++count
                 });
-
             }
 
             alert('Iterations: ' + max + "\n" + 'Execution time: ' + Math.round(performance.now() - start) + 'ms');

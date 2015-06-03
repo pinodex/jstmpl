@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Test</title>
+    <style type="text/css">
+        body {
+            font-size: 2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <button id="run">RUN TEST</button>
+
+    <div id="test1"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+    <div id="test4"></div>
+    <div id="test5"></div>
+    <div id="test6"></div>
+    <div id="test7"></div>
+    <div id="test8"></div>
+    <div id="test9"></div>
+    <div id="test10"></div>
+
+    <script type="text/template" data-template="test1" data-target="#test1">{{ count }}</script>
+    <script type="text/template" data-template="test2" data-target="#test2">{{ count }}</script>
+    <script type="text/template" data-template="test3" data-target="#test3">{{ count }}</script>
+    <script type="text/template" data-template="test4" data-target="#test4">{{ count }}</script>
+    <script type="text/template" data-template="test5" data-target="#test5">{{ count }}</script>
+    <script type="text/template" data-template="test6" data-target="#test6">{{ count }}</script>
+    <script type="text/template" data-template="test7" data-target="#test7">{{ count }}</script>
+    <script type="text/template" data-template="test8" data-target="#test8">{{ count }}</script>
+    <script type="text/template" data-template="test9" data-target="#test9">{{ count }}</script>
+    <script type="text/template" data-template="test10" data-target="#test10">{{ count }}</script>
+
+    <script src="jstmpl.js"></script>
+    <script>
+        var page = new Jstmpl({
+            debug: true
+        });
+
+        document.getElementById('run').addEventListener('click', function() {
+            this.style.display = 'none';
+            test();
+        }, false);
+
+        function test() {
+            var start = performance.now();
+            var count = 0;
+            var max = 1000;
+
+            for (var i = 0; i <= max; i++) {
+                count *= Math.random();
+
+                page.render('test1', {
+                    count: ++count
+                });
+
+                page.render('test2', {
+                    count: ++count
+                });
+
+                page.render('test3', {
+                    count: ++count
+                });
+
+                page.render('test4', {
+                    count: ++count
+                });
+
+                page.render('test5', {
+                    count: ++count
+                });
+
+                page.render('test6', {
+                    count: ++count
+                });
+
+                page.render('test7', {
+                    count: ++count
+                });
+
+                page.render('test8', {
+                    count: ++count
+                });
+
+                page.render('test9', {
+                    count: ++count
+                });
+
+                page.render('test10', {
+                    count: ++count
+                });
+
+            }
+
+            alert('Iterations: ' + max + "\n" + 'Execution time: ' + Math.round(performance.now() - start) + 'ms');
+            alert('Check the source to see how tests are done.')
+        }
+    </script>
+</body>
+</html>

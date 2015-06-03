@@ -39,8 +39,15 @@
             overflow-x: auto;
         }
 
-        .footer {
-            border-top: 1px solid #ccc;
+        table {
+            border: 1px solid #ccc;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
         }
     </style>
 </head>
@@ -48,15 +55,15 @@
     <div class="container">
         <div class="main">
             <h1 data-template="welcome">{{ welcome }}!</h1>
-            <p>This is jstmpl, a simple templating engine written in JavaScript. Very simple that it can only do things on variables. More features will come later such as conditional statements, for loops, etc...</p>
+            <p>This is jstmpl, a simple templating engine written in JavaScript. Very simple that it can only do things on variables. More features will come later such as conditional statements, for loops, etc...</p> 
             <p>There are two ways to use the templating engine:</p>
             <p><strong>Direct to element</strong></p>
             <pre><code>&#x3C;div data-template=&#x22;hello-world&#x22;&#x3E;{{ hello }} {{ world }}&#x3C;/div&#x3E;
 &#x3C;script&#x3E;
-    new Template(&#x27;hello-world&#x27;).parse({
+    new Jstmpl().render(&#x27;hello-world&#x27;, {
         hello: &#x27;Hello&#x27;,
         world: &#x27;World!&#x27;
-    }
+    });
 &#x3C;/script&#x3E;</code></pre>
             <p>The variables will be directly parsed to the element.</p>
             <p>This will output:</p>
@@ -65,12 +72,12 @@
             </div>
             <p><strong>Template script to element:</strong></p>
             <pre><code>&#x3C;div id=&#x22;hello-world&#x22;&#x3E;&#x3C;/div&#x3E;
-
 &#x3C;script type=&#x22;text/template&#x22; data-template=&#x22;hello-world&#x22; data-target=&#x22;#hello-world&#x22;&#x3E;
     {{ hello }} {{ world }} {{ again }}
 &#x3C;/script&#x3E;
+
 &#x3C;script&#x3E;
-    new Template(&#x27;hello-world&#x27;).parse({
+    new Jstmpl().render(&#x27;hello-world&#x27;, {
         hello: &#x27;Hello&#x27;,
         world: &#x27;World!&#x27;,
         again: &#x27;Again&#x27;
@@ -81,31 +88,95 @@
             <div class="output">
                 <div id="hello-world"></div>
             </div>
-            <p>The <code>parse</code> function can accept two different data format. It can also be nested. Examples:</p>
-            <pre><code>// Using key value object
-new Template(&#x27;hello-world&#x27;).parse({
-    hello: &#x27;Hello&#x27;,
-    world: &#x27;World!&#x27;
-});
+            <p><strong>Other usage examples:</strong></p>
+            <p>Updating templates:</p>
+            <pre><code>&#x3C;div class=&#x22;footer&#x22;&#x3E;&#x3C;/div&#x3E;
+&#x3C;div class=&#x22;footer&#x22;&#x3E;&#x3C;/div&#x3E;
+&#x3C;div class=&#x22;footer&#x22;&#x3E;&#x3C;/div&#x3E;
 
-// Using string literals
-new Template(&#x27;hello-world&#x27;).parse(&#x27;hello&#x27;, &#x27;Hello&#x27;);
+&#x3C;script type=&#x22;text/template&#x22; data-template=&#x22;footer&#x22; data-target=&#x22;.footer&#x22;&#x3E;
+    &#x3C;p&#x3E;Time now is {{ time }}&#x3C;/p&#x3E;
+&#x3C;/script&#x3E;
 
-// Nesting
-new Template(&#x27;hello-world&#x27;).parse(&#x27;hello&#x27;, &#x27;Hello&#x27;).parse(&#x27;world&#x27;, &#x27;World!&#x27;);
+&#x3C;script&#x3E;
+    var footer = page.render(&#x27;footer&#x27;, {
+        time: new Date()
+    });
 
-// Re-using template object
-var template = new Template(&#x27;hello-world&#x27;);
-template.parse(&#x27;hello&#x27;, &#x27;Hello&#x27;);
-template.parse(&#x27;world&#x27;, &#x27;World!&#x27;);
-
-form.onsubmit(function() {
-    // This is a pseudo-code.
-
-    template.parse(&#x27;world&#x27;, form[&#x27;name&#x27;]);
-});</code></pre>
+    setInterval(function() {
+        footer.parse({
+            time: new Date()
+        });
+    }, 1000);
+&#x3C;/script&#x3E;</code></pre>
         </div>
-        <div class="footer"></div>
+        <p>This will output:</p>
+        <div class="output">
+            <div class="footer"></div>
+            <div class="footer"></div>
+            <div class="footer"></div>
+        </div>
+        <p>A single Jstmpl object can be used for the whole page. It can also accept key-value options:</p>
+        <pre><code>new Jstmpl(options);</code></pre>
+        <p>List of options:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>debug</td>
+                    <td>null</td>
+                    <td>If set to true, jstmpl will log debugging informations to the console.</td>
+                </tr>
+                <tr>
+                    <td>fn</td>
+                    <td><em>Please read below</em></td>
+                    <td>Object of custom functions</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Functions:</p>
+        <p>Functions are used here to manipulate strings. Example:</p>
+        <pre><code>{{ variable|function_name }}</code></pre>
+        <p>List of pre-defined functions:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>raw</td>
+                    <td>By default, jstmpl will encode HTML entities. Using this function will return the raw format.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Custom functions:</p>
+        <p>You can define custom functions when creating the Jstmpl object. The variable content will be passed to this function and should return the processed string. Example:</p>
+        <pre><code>var page = new Jstmpl({
+    fn: {
+        base64_encode: function(string) {
+            return btoa(string);
+        }
+    }
+});</code></pre>
+        <p>Then you can use the function in the template:</p>
+        <pre><code>&#x3C;div data-template=&#x22;base64&#x22;&#x3E;
+    {{ value|base64_encode }}
+&#x3C;/div&#x3E;
+
+&#x3C;script&#x3E;
+    page.render(&#x27;base64&#x27;, {
+        value: &#x27;Hello, World in Base64&#x27;
+    });
+&#x3C;/script&#x3E;</code></pre>
     </div>
     <script type="text/template" data-template="hello-world-2" data-target="#hello-world">
         {{ hello }} {{ world }} {{ again }}
@@ -127,24 +198,33 @@ form.onsubmit(function() {
             'Welkom'
         ];
 
-        var welcomeTemplate = new Template('welcome');
-        welcomeTemplate.parse('welcome', welcomeTrans[Math.floor(Math.random() * welcomeTrans.length)]);
+        var page = new Jstmpl({
+            debug: true
+        });
 
-        new Template('hello-world').parse({
+        page.render('welcome', {
+            welcome: welcomeTrans[Math.floor(Math.random() * welcomeTrans.length)]
+        });
+
+        page.render('hello-world', {
             hello: 'Hello',
             world: 'World!'
         });
 
-        new Template('hello-world-2').parse({
+        page.render('hello-world-2', {
             hello: 'Hello',
             world: 'World!',
             again: 'Again'
         });
 
-        var footer = new Template('footer').parse('time', new Date());
+        var footer = page.render('footer', {
+            time: new Date()
+        });
 
         setInterval(function() {
-            footer.parse('time', new Date());
+            footer.parse({
+                time: new Date()
+            });
         }, 1000);
     </script>
 </body>

@@ -5,7 +5,7 @@ Simple JavaScript Templating Engine
 ```
 <div data-template="hello-world">{{ hello }} {{ world }}</div>
 <script>
-    new Template('hello-world').parse({
+    new Jstmpl().render('hello-world', {
         hello: 'Hello',
         world: 'World!'
     }

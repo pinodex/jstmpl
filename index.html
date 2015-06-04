@@ -54,6 +54,10 @@
             border-top: 1px solid #ccc;
             font-size: 12px;
         }
+
+        #footer p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -172,6 +176,10 @@
         <p>There&rsquo;s currently few features implemented in Jstmpl, I&rsquo;ll be adding more features later. But for now, here&rsquo;s what&rsquo;s working:</p>
         <p>&bullet; Variables</p>
         <pre><code>{{ variable }}</code></pre>
+        <p>&bullet; Conditional statements</p>
+        <pre>{% if condition %} [...] {% endif %}
+{% if not condition %} [...] {% endif %}
+{% if condition == 'string' %} [...] {% endif %}</pre>
         <p>&bullet; For-loops</p>
         <pre><code>{% for item in items %}
     {{ item }}
@@ -214,7 +222,8 @@
     });
 &#x3C;/script&#x3E;</code></pre>
         <div id="footer">
-            <em>Documentation will improve everytime I'm in a mood.</em>
+            <p data-template="render-time">Page rendered in {{ time }}</p>
+            <p><em>Documentation will improve everytime I'm in a mood.</em></p>
         </div>
     </div>
     <script type="text/template" data-template="hello-world-2" data-target="#hello-world">
@@ -228,6 +237,8 @@
     </script>
     <script type="text/javascript" src="jstmpl.js"></script>
     <script type="text/javascript">
+        var start = performance.now();
+
         var welcomeTrans = [
             'Welcome',
             'Bienvenido',
@@ -277,6 +288,10 @@
                 time: new Date()
             });
         }, 1000);
+        
+        new Jstmpl().template('render-time').render({
+            time: Math.round(performance.now() - start) + 'ms'
+        });
     </script>
 </body>
 </html>

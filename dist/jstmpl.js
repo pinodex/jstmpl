@@ -1,8 +1,8 @@
-/*! jstmpl 1.0.0 Built: 2015-06-06T14:37:18 | Copyright (c) 2015 Raphael Marco */
+/*! jstmpl 1.0.0 Built: 2015-06-06T14:44:29 | Copyright (c) 2015 Raphael Marco */
 
 (function(){
 
-	"use strict";
+    "use strict";
 
     window.Jstmpl = function Jstmpl(options) {
 

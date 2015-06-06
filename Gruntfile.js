@@ -20,7 +20,7 @@ module.exports = function(grunt) {
             options: {
                 stripBanners: true,
                 separator: '\n\n',
-                banner: banner + '\n(function(){\n\n\t"use strict";\n\n',
+                banner: banner + '\n(function(){\n\n    "use strict";\n\n',
                 footer: '\n\n}());',
                 process: function(src, filepath) {
                     return src.replace(/(.+)/g, '    $1');

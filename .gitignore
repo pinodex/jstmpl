@@ -1,7 +1,11 @@
+sftp-config.json
+node_modules
+
 *.tmlanguage.cache
 *.tmPreferences.cache
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-sftp-config.json
-test2.html
+.grunt
+
+test*.html
